@@ -1,17 +1,19 @@
 <template>
   <v-container fluid px-0 pt-0 pb-1>
-    <v-card elevation="2" class="mx-auto abc open" primary flat width="100%" ma-0 pa-0>
+   
+    <v-card elevation="2" class="mx-auto abc open test mt-3 mx-1" light  max-width="550">
+      
       <div class="padd">
         <v-card-title class="pt-0">
           <v-layout align-center row wrap>
-            <v-flex xs2 sm1>
+            <v-flex xs2 sm2>
               <!-- <router-link :to="{  name: 'Profile', params: {username}}"> -->
               <v-avatar color="black" justify-center>
                 <v-img :src="photo"></v-img>
               </v-avatar>
               <!-- </router-link> -->
             </v-flex>
-            <v-flex xs10 sm11>
+            <v-flex xs10 sm10>
               <v-layout ma-3 row wrap>
                 <v-flex>
                   <v-layout row wrap>
@@ -41,6 +43,13 @@
             <v-row align="center" justify="end"><small>{{post.posted_on | moment("from") }}</small></v-row>
           </v-list-item>-->
         </v-card-title>
+        <v-img
+      class="white--text align-end"
+      height="250px"
+      src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+    >
+
+    </v-img>
 
         <v-card-text class="py-0 pl-1">
           <truncate clamp="show more" :length="90" less="show less" type="html" :text="p"></truncate>
@@ -54,11 +63,12 @@
         </div>
         <v-divider></v-divider>
         <v-card-actions class="pa-0">
-          <!-- <v-btn class="pa-0" text fab  slot="activator" color="grey darken-1">
-          </v-btn>-->
-
-          <v-icon @click="liketoggle" color="grey darken-1" v-bind:id="this.post.id">mdi-thumb-up</v-icon>
-
+          <v-btn class="pa-0" text fab  slot="activator" color="grey darken-1">
+            <v-icon @click="liketoggle" v-bind:id="this.post.id">mdi-thumb-up</v-icon>
+          </v-btn>
+           <!-- <div slot="activator" v-bind:id="this.post.id">
+          
+           </div> -->
           <v-btn class="pa-0" @click="show = !show" text fab color="grey darken-1">
             <v-icon>mdi-comment</v-icon>
           </v-btn>
@@ -78,7 +88,7 @@
                   required
                 >
                   <template slot="append-outer">
-                    <v-icon size="40" color="rgb(0,122,255)" @click="validate">mdi-comment-plus</v-icon>
+                    <v-icon size="40" color="rgb(76, 217, 100)" @click="validate">mdi-comment-plus</v-icon>
                   </template>
                 </v-textarea>
               </v-flex>
@@ -233,7 +243,7 @@ export default {
   color: rgb(76, 217, 100) !important;
 }
 .test {
-  border: 2.5px solid rgb(102, 102, 102) !important;
+  border-bottom: 3.5px solid rgb(184, 121, 49) !important;
 }
 .flexfix {
   align-items: unset !important;

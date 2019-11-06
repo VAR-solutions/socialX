@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue"
 import Signup from "../views/Signup.vue";
 import Dashboard from "../views/Dashboard.vue";
+import Profile from "../views/Profile.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -25,6 +26,10 @@ const routes = [
     path: '/feed',
     name: 'dashboard',
     component: Dashboard
+  }, {
+    path: "/profile",
+    name: "profile",
+    component: Profile
   }
 ];
 

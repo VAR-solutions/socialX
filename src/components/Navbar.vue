@@ -34,6 +34,37 @@
             </v-list-item-action>
           </v-list-item>
         </v-list-group>
+        <v-list-group color="dark" prepend-icon="mdi-account-multiple" value="true">
+          <template v-slot:activator>
+            <v-list-item-title dark>Friends</v-list-item-title>
+          </template>
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img :src="photo"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>Vishal Gaur</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-list-item-icon>
+                <v-icon color="green">mdi-circle-small</v-icon>
+              </v-list-item-icon>
+            </v-list-item-action>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img :src="photo"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>Vashist Hegde</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-list-item-icon>
+                <v-icon color="green">mdi-circle-small</v-icon>
+              </v-list-item-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-group>
       </v-list>
     </v-navigation-drawer>
 
@@ -49,17 +80,44 @@
         <v-btn v-if="!auth" exact text depressed to="/login">Login</v-btn>
         <v-btn v-if="auth" exact text depressed @click="logout">Logout</v-btn>
       </v-toolbar-items>
-      <v-app-bar-nav-icon @click.stop="drawerRight = !drawerRight" />
+
+      <v-btn-icon v-if="winsize" @click.stop="drawerRight = !drawerRight" ><v-icon>mdi-account-multiple</v-icon></v-btn-icon>
     </v-app-bar>
 
     <!-- Left -->
 
     <v-navigation-drawer dark v-model="drawer" app>
       <v-list dark dense>
+        <v-list-item>
+          <v-avatar class="mx-auto" size="150">
+            <img :src="photo" alt="John" />
+          </v-avatar>
+        </v-list-item>
+        <v-list-item >
+          <div class="mx-auto">
+          Name
+          </div>
+        </v-list-item>
+        <v-list-item >
+          <div class="mx-auto">
+          Username
+          </div>
+        </v-list-item>
+        <v-list-item >
+          <div class="mx-auto">
+            <v-btn exact router to="/profile" class="ma-2" outlined color="white">View Profile</v-btn>
+          </div>
+        </v-list-item>
+
+        <v-list-item>
+        </v-list-item>
+        
+
         <v-list-group color="dark" prepend-icon="mdi-apple-finder" value="true">
           <template v-slot:activator>
             <v-list-item-title dark>Discover Friends</v-list-item-title>
           </template>
+
           <v-list-item>
             <v-list-item-avatar>
               <v-img :src="photo"></v-img>
@@ -96,6 +154,7 @@
 </template>
 
 <script>
+// console.log(window.innerWidth);
 import axios from "axios";
 export default {
   data: () => ({
@@ -106,6 +165,9 @@ export default {
     photo:
       "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
   }),
+  created(){
+    this.user= this.$session.get("user").user;
+  },
   methods: {
     logout() {
       this.$session.destroy();
@@ -122,6 +184,13 @@ export default {
       } else {
         return false;
       }
+    },
+    winsize() {
+      console.log(window.innerWidth);
+      if (window.innerWidth > 1125) {
+        return false;
+      }
+      return true;
     }
   },
   watch: {
