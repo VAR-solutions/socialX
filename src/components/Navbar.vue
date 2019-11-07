@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- Right -->
-    <v-navigation-drawer v-model="drawerRight" app clipped right dark>
-      <v-list dark dense>
+    <v-navigation-drawer v-if="auth" v-model="drawerRight" app clipped right dark>
+      <v-list v-if="auth" dark dense>
         <v-list-group color="dark" prepend-icon="mdi-account-multiple" value="true">
           <template v-slot:activator>
             <v-list-item-title dark>Online Friends</v-list-item-title>
@@ -69,9 +69,16 @@
     </v-navigation-drawer>
 
     <v-app-bar app clipped-right color="rgb(40,40,40)" flat dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>SocialX</v-toolbar-title>
+      <v-app-bar-nav-icon v-if="auth" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>
+        <router-link :to="{ name: 'dashboard'}">
+          <v-avatar :tile="true">
+            <v-img
+              src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+            ></v-img>
+          </v-avatar>
+        </router-link>SocialX
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -81,62 +88,56 @@
         <v-btn v-if="auth" exact text depressed @click="logout">Logout</v-btn>
       </v-toolbar-items>
 
-      <v-btn-icon v-if="winsize" @click.stop="drawerRight = !drawerRight" ><v-icon>mdi-account-multiple</v-icon></v-btn-icon>
+      <!-- <v-btn v-if="winsize && auth" @click.stop="drawerRight = !drawerRight"> -->
+      <v-icon v-if="winsize && auth" @click.stop="drawerRight = !drawerRight">mdi-account-multiple</v-icon>
+      <!-- </v-btn> -->
     </v-app-bar>
 
     <!-- Left -->
 
-    <v-navigation-drawer dark v-model="drawer" app>
+    <v-navigation-drawer dark v-model="drawer" v-if="auth" app>
       <v-list dark dense>
         <v-list-item>
           <v-avatar class="mx-auto" size="150">
             <img :src="photo" alt="John" />
           </v-avatar>
         </v-list-item>
-        <v-list-item >
-          <div class="mx-auto">
-          Name
-          </div>
+        <v-list-item>
+          <div class="mx-auto">{{ user.name }}</div>
         </v-list-item>
-        <v-list-item >
-          <div class="mx-auto">
-          Username
-          </div>
+        <v-list-item>
+          <div class="mx-auto">{{ user.username }}</div>
         </v-list-item>
-        <v-list-item >
+        <v-list-item>
           <div class="mx-auto">
-            <v-btn exact router to="/profile" class="ma-2" outlined color="white">View Profile</v-btn>
+            <v-btn
+              exact
+              router
+              :to="{ name: 'profile', params: {username: user.username}}"
+              class="ma-2"
+              outlined
+              color="white"
+            >View Profile</v-btn>
           </div>
         </v-list-item>
 
-        <v-list-item>
-        </v-list-item>
-        
+        <v-list-item></v-list-item>
 
         <v-list-group color="dark" prepend-icon="mdi-apple-finder" value="true">
           <template v-slot:activator>
             <v-list-item-title dark>Discover Friends</v-list-item-title>
           </template>
 
-          <v-list-item>
+          <v-list-item
+            v-for="(people, i) in sugges"
+            :key="i"
+            :to="{ name: 'profile', params: {username: people.username}}"
+          >
             <v-list-item-avatar>
               <v-img :src="photo"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>Ananya Tewari</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-list-item-icon>
-                <v-icon>mdi-account-plus</v-icon>
-              </v-list-item-icon>
-            </v-list-item-action>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img :src="photo"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>Hardik Soni</v-list-item-title>
+              <v-list-item-title>{{ people.name }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-list-item-icon>
@@ -159,34 +160,42 @@ import axios from "axios";
 export default {
   data: () => ({
     drawer: null,
+    user: {},
+    sugges: [],
     drawerRight: null,
     right: false,
     left: false,
     photo:
       "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
   }),
-  created(){
-    this.user= this.$session.get("user").user;
+  created() {
+    if (this.$session.get("jwt")) {
+      this.user = this.$session.get("user").user;
+      axios.get("/users/" + this.user.username + "/suggestions").then(res => {
+        res.data.forEach(username => {
+          axios.get("/users/" + username).then(r => {
+            this.sugges.push({
+              name: r.data.name,
+              username: r.data.username
+            });
+          });
+        });
+      });
+    }
   },
   methods: {
     logout() {
       this.$session.destroy();
+      this.$store.commit("LOGOUT");
       this.$router.push({ name: "login" });
     }
   },
   computed: {
     auth() {
-      if (this.$session.exists()) {
-        axios.defaults.headers.common["x-access-token"] = this.$session.get(
-          "jwt"
-        );
-        return true;
-      } else {
-        return false;
-      }
+      return this.$store.state.isAuthenticated;
     },
     winsize() {
-      console.log(window.innerWidth);
+      // console.log(window.innerWidth);
       if (window.innerWidth > 1125) {
         return false;
       }
@@ -197,6 +206,9 @@ export default {
     group() {
       this.drawer = false;
     }
+  },
+  updated() {
+    this.auth;
   }
 };
 </script>

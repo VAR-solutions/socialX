@@ -9,10 +9,19 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field v-model="email" label="Email" name="email" type="text" />
+              <v-text-field
+                :rules="[rules.required, rules.email]"
+                color="white"
+                v-model="email"
+                label="Email"
+                name="email"
+                type="text"
+              />
 
               <v-text-field
                 id="password"
+                color="white"
+                :rules="[rules.required]"
                 v-model="password"
                 label="Password"
                 name="password"
@@ -41,7 +50,14 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      rules: {
+        required: value => !!value || "Required.",
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Invalid e-mail.";
+        }
+      }
     };
   },
   methods: {

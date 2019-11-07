@@ -16,7 +16,7 @@ export default new Vuex.Store({
       state.user = user;
       state.isAuthenticated = true;
     },
-    LOGOUT(state, user) {
+    LOGOUT(state) {
       state.user = null;
       state.isAuthenticated = false;
     }
@@ -41,7 +41,27 @@ export default new Vuex.Store({
       })
 
     },
-    register() { }
+    register({ commit, state }, data) {
+      return new Promise((resolve, reject) => {
+        axios
+          .post(
+            "/users/register",
+            qs.stringify({
+              name: data.name,
+              email: data.email,
+              username: data.username,
+              password: data.password
+            })
+          )
+          .then(function (res) {
+            resolve(res)
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err)
+          });
+      })
+    }
   },
   modules: {}
 });

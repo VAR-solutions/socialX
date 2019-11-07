@@ -9,10 +9,17 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field v-model="name" label="Name" name="Name" type="text" />
-              <v-text-field v-model="email" label="Email" name="email" type="text" />
-              <v-text-field v-model="username" label="Usename" name="Username" type="text" />
+              <v-text-field color="white" v-model="name" label="Name" name="Name" type="text" />
+              <v-text-field color="white" v-model="email" label="Email" name="email" type="text" />
               <v-text-field
+                color="white"
+                v-model="username"
+                label="Usename"
+                name="Username"
+                type="text"
+              />
+              <v-text-field
+                color="white"
                 id="password"
                 v-model="password"
                 label="Password"
@@ -49,26 +56,15 @@ export default {
   },
   methods: {
     register() {
-      axios
-        .post(
-          "/users/register",
-          qs.stringify({
-            name: this.name,
-            email: this.email,
-            username: this.username,
-            password: this.password
-          }),
-          {
-            headers: {
-              "Access-Control-Allow-Origin": "*"
-            }
-          }
-        )
-        .then(function(res) {
-          this.$router.push("login");
+      this.$store
+        .dispatch("register", {
+          name: this.name,
+          username: this.username,
+          email: this.email,
+          password: this.password
         })
-        .catch(err => {
-          console.log(err);
+        .then(res => {
+          this.$router.push({ name: "login" });
         });
     }
   }
