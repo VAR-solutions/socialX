@@ -1,23 +1,87 @@
 <template>
 <v-container fluid>
   <v-layout row wrap pt-0 mt-0>
-    <v-flex d-flex xs12 sm12 md4 lg12 pt-0 mt-0 shrink>
-      <v-layout row wrap>
-        <v-flex d-flex>
-          <v-card width = "100%" flat mt-1 fixed>
-            <v-layout align-center justify-center>
-              <v-hover>
-                <v-avatar size="140" slot-scope="{ hover }">
-                  <v-img
-                   src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
-                  >
 
-                  </v-img>
+      <!-- profile -->
+    <v-flex d-flex xs12 sm12 md12 lg12 pt-0 mt-0 shrink>
+        <v-card width = "100%"  mt-1  elevation="0">
+      <v-layout row wrap>
+
+        <v-flex xs12  sm12  md5  lg4 align-content="center">
+          
+            
+              <v-layout align-center justify-center>
+                <v-avatar size="170" class="align-center" >
+                  <img 
+                   src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
+                  />
+
+                 
                 </v-avatar>
-              </v-hover>
-              <br>
+              
+              </v-layout>
+              </v-flex>
+
+
+
+
+              <v-flex xs12  sm12  md7  lg8>
+                  
+                  <p>
+                {{user.username}}
+              </p>
+              <v-list-tile>
+                <v-layout>
+                  <v-list-tile-action>
+                    <v-icon>mdi-account</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-content>
+                    {{user.name}}
+                  </v-list-tile-content>
+                </v-layout>
+              </v-list-tile>
+
+              <v-list-tile>
+                <v-layout v-if="user.email">
+                  <v-list-tile-action>
+                    <v-icon>mdi-at</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-content>
+                    {{user.email}}
+                  </v-list-tile-content>
+                </v-layout>
+              </v-list-tile>
+
+              <v-list-tile>
+                <v-layout v-if="user.mobile">
+                  <v-list-tile-action>
+                    <v-icon>mdi-phone</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-content>
+                    {{user.mobile}}
+                  </v-list-tile-content>
+                </v-layout>
+              </v-list-tile>
+
+
+              <v-list-tile>
+                <v-layout >
+                  <v-list-tile-action>
+                    <v-icon>mdi-location</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-content v-if="user.location">
+                    {{user.location}}
+                  </v-list-tile-content>
+                </v-layout>
+              </v-list-tile>
+
+              
+                  
+              </v-flex>
             </v-layout>
-            <v-layout align-center justify-center>
+        </v-card>
+    </v-flex>
+            <!-- <v-layout align-center justify-center>
               <p>
                 {{user.username}}
               </p>
@@ -73,9 +137,12 @@
           </v-card>
         </v-flex>
       </v-layout>
-    </v-flex>
+    </v-flex> -->
 
-    <v-flex xs12 sm12 md8 lg9 pt-0 mt-0>
+
+    <!-- posts -->
+
+    <v-flex xs12 sm12 md12 lg12 pt-0 mt-0>
       <v-layout row wrap>
         <v-flex xs12>
             <Post v-for="(i,key) in posts" :key="key" :post="i"/>
