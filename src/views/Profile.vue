@@ -6,7 +6,7 @@
         <v-card width="100%" mt-1 elevation="0" color="#303030">
           <v-layout row wrap>
 
-            <v-flex xs12 sm12 md6 lg6 align-content="center">
+            <v-flex xs12 sm12 md6 lg6>
               <v-layout align-center justify-center>
                 <v-avatar size="170" class="align-center">
                   <img
@@ -18,21 +18,18 @@
 
             <v-flex xs12 sm12 md6 lg6>
               
-              <v-layout >
-
+              <v-layout align-center justify-center>
                 {{user.username}}
               </v-layout>
 
 
-              <v-layout >
+              <v-layout align-center justify-center>
                 <v-icon>mdi-account</v-icon>
-
                 {{user.name}}
               </v-layout>
 
-              <v-layout v-if="user.email" >
+              <v-layout v-if="user.email" align-center justify-center>
                 <v-icon>mdi-at</v-icon>
-
                 {{user.email}}
               </v-layout>
 
@@ -49,6 +46,103 @@
           </v-layout>
         </v-card>
       </v-flex>
+
+
+      <!-- followers/following -->
+      <v-flex>
+        <v-layout align-center justify-center>
+
+      
+      <!-- followers -->
+      <div class="text-center">
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <template v-slot:activator="{ on }">
+          <v-btn
+          text
+          v-on="on"
+        >
+          Followers
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+          Followers
+        </v-card-title>
+
+        <v-card-text>
+         List of followers will be here
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            Done
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    </div>
+
+
+    <!-- following -->
+      <div class="text-center">
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <template v-slot:activator="{ on }">
+          <v-btn
+          text
+          v-on="on"
+        >
+          Following
+        </v-btn>
+      </template>
+
+      <v-card>
+        <v-card-title
+          class="headline grey lighten-2"
+          primary-title
+        >
+          Following
+        </v-card-title>
+
+        <v-card-text>
+         List of following will be here
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            Done
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    </div>
+
+        </v-layout>
+      </v-flex>
+
       <!-- <v-layout align-center justify-center>
               <p>
                 {{user.username}}
@@ -159,7 +253,8 @@ export default {
   data() {
     return {
       user: null,
-      posts: []
+      posts: [],
+      dialog: false
     };
   },
 
