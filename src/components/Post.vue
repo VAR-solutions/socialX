@@ -88,7 +88,7 @@
                   required
                 >
                   <template slot="append-outer">
-                    <v-icon size="40" color="rgb(76, 217, 100)" @click="validate">mdi-comment-plus</v-icon>
+                    <v-icon size="40" color="rgb(24,103,192)" @click="validate">mdi-comment-plus</v-icon>
                   </template>
                 </v-textarea>
               </v-flex>
@@ -240,10 +240,11 @@ export default {
   border-radius: 12px;
 }
 .likedcolor {
-  color: rgb(76, 217, 100) !important;
+  color: rgb(24,103,192) !important;
+  /* color: rgb(76, 217, 100) !important; */
 }
 .test {
-  border-bottom: 3.5px solid rgb(184, 121, 49) !important;
+  border-bottom: 3.5px solid rgb(24,103,192) !important;
 }
 .flexfix {
   align-items: unset !important;

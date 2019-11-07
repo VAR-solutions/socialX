@@ -74,7 +74,7 @@
         <router-link :to="{ name: 'dashboard'}">
           <v-avatar :tile="true">
             <v-img
-              src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+              src="https://c7.uihere.com/files/203/717/254/social-science-global-perspectives-social-media-world-business-social-media.jpg"
             ></v-img>
           </v-avatar>
         </router-link>SocialX
@@ -99,7 +99,7 @@
       <v-list dark dense>
         <v-list-item>
           <v-avatar class="mx-auto" size="150">
-            <img :src="photo" alt="John" />
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSry6wge2X4Kc4dPVlwhL8sLBRzJF-7xTKu_IqCaebGD5ugW9XY&s" alt="John" />
           </v-avatar>
         </v-list-item>
         <v-list-item>

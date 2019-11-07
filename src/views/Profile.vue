@@ -1,87 +1,55 @@
 <template>
-<v-container fluid>
-  <v-layout row wrap pt-0 mt-0>
-
+  <v-container fluid>
+    <v-layout row wrap pt-0 mt-0>
       <!-- profile -->
-    <v-flex d-flex xs12 sm12 md12 lg12 pt-0 mt-0 shrink>
-        <v-card width = "100%"  mt-1  elevation="0">
-      <v-layout row wrap>
+      <v-flex d-flex xs12 sm12 md12 lg12 pt-0 mt-0 shrink>
+        <v-card width="100%" mt-1 elevation="0" color="#303030">
+          <v-layout row wrap>
 
-        <v-flex xs12  sm12  md5  lg4 align-content="center">
-          
-            
+            <v-flex xs12 sm12 md6 lg6 align-content="center">
               <v-layout align-center justify-center>
-                <v-avatar size="170" class="align-center" >
-                  <img 
-                   src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
+                <v-avatar size="170" class="align-center">
+                  <img
+                    src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
                   />
-
-                 
                 </v-avatar>
-              
               </v-layout>
-              </v-flex>
+            </v-flex>
 
-
-
-
-              <v-flex xs12  sm12  md7  lg8>
-                  
-                  <p>
-                {{user.username}}
-              </p>
-              <v-list-tile>
-                <v-layout>
-                  <v-list-tile-action>
-                    <v-icon>mdi-account</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                    {{user.name}}
-                  </v-list-tile-content>
-                </v-layout>
-              </v-list-tile>
-
-              <v-list-tile>
-                <v-layout v-if="user.email">
-                  <v-list-tile-action>
-                    <v-icon>mdi-at</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                    {{user.email}}
-                  </v-list-tile-content>
-                </v-layout>
-              </v-list-tile>
-
-              <v-list-tile>
-                <v-layout v-if="user.mobile">
-                  <v-list-tile-action>
-                    <v-icon>mdi-phone</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content>
-                    {{user.mobile}}
-                  </v-list-tile-content>
-                </v-layout>
-              </v-list-tile>
-
-
-              <v-list-tile>
-                <v-layout >
-                  <v-list-tile-action>
-                    <v-icon>mdi-location</v-icon>
-                  </v-list-tile-action>
-                  <v-list-tile-content v-if="user.location">
-                    {{user.location}}
-                  </v-list-tile-content>
-                </v-layout>
-              </v-list-tile>
-
+            <v-flex xs12 sm12 md6 lg6>
               
-                  
-              </v-flex>
-            </v-layout>
+              <v-layout >
+
+                {{user.username}}
+              </v-layout>
+
+
+              <v-layout >
+                <v-icon>mdi-account</v-icon>
+
+                {{user.name}}
+              </v-layout>
+
+              <v-layout v-if="user.email" >
+                <v-icon>mdi-at</v-icon>
+
+                {{user.email}}
+              </v-layout>
+
+              <v-layout v-if="user.mobile" >
+                <v-icon>mdi-phone</v-icon>
+                {{user.mobile}}
+              </v-layout>
+
+              <v-layout v-if="user.location" >
+                <v-icon>mdi-location</v-icon>
+                {{user.location}}
+              </v-layout>
+            </v-flex>
+          </v-layout>
         </v-card>
-    </v-flex>
-            <!-- <v-layout align-center justify-center>
+      </v-flex>
+      <!-- <v-layout align-center justify-center>
               <p>
                 {{user.username}}
               </p>
@@ -137,23 +105,21 @@
           </v-card>
         </v-flex>
       </v-layout>
-    </v-flex> -->
+      </v-flex>-->
 
+      <!-- posts -->
 
-    <!-- posts -->
+      <v-flex xs12 sm12 md12 lg12 pt-0 mt-0>
+        <v-layout row wrap>
+          <v-flex xs12>
+            <Post v-for="(i,key) in posts" :key="key" :post="i" />
+          </v-flex>
+        </v-layout>
+      </v-flex>
+    </v-layout>
+  </v-container>
 
-    <v-flex xs12 sm12 md12 lg12 pt-0 mt-0>
-      <v-layout row wrap>
-        <v-flex xs12>
-            <Post v-for="(i,key) in posts" :key="key" :post="i"/>
-        </v-flex>
-      </v-layout>
-    </v-flex>
-    
-  </v-layout>
-</v-container>
-   
-    <!-- <v-navigation-drawer absolute permanent dark width="30%">
+  <!-- <v-navigation-drawer absolute permanent dark width="30%">
       <template >
           <v-list-item>
           <v-avatar class="mx-auto" size="150">
@@ -182,41 +148,39 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer> -->
- 
+  </v-navigation-drawer>-->
 </template>
 
 <script>
-import axios from 'axios';
-import Post from '../components/Post';
+import axios from "axios";
+import Post from "../components/Post";
 export default {
   name: "profile",
   data() {
     return {
-        user: null,
-        posts: []
-    }
+      user: null,
+      posts: []
+    };
   },
 
   components: {
     Post
   },
 
-  created(){
-      this.user= this.$session.get("user").user;
-      axios.get('/posts/').then(res => {
-        res.data.data.posts.forEach(post => {
-          this.posts.push(post);
-        });
-      })
+  created() {
+    this.user = this.$session.get("user").user;
+    axios.get("/posts/").then(res => {
+      res.data.data.posts.forEach(post => {
+        this.posts.push(post);
+      });
+    });
   }
 };
-
 </script>
 
 <style scoped>
-  .resp{
-   width: 100%;
-   height: auto;
-  }
+.resp {
+  width: 100%;
+  height: auto;
+}
 </style>
