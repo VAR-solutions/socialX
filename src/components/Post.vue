@@ -44,12 +44,16 @@
         <v-card-text class="pa-0 subtitle-1 pb-1">
           <truncate clamp="show more" :length="90" less="show less" type="html" :text="p"></truncate>
         </v-card-text>
-
-        <v-img
+       <v-dialog v-model="dialog" width="1000px">
+      <template v-slot:activator="{ on }">
+        <v-img v-on="on"
           class="white--text align-end"
           height="250px"
           src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         ></v-img>
+      </template>
+      <Postmodal />
+       </v-dialog>
 
         <div class="px-0 ma-0 py-1">
           <p class="font-weight-light ma-0 pa-0">
@@ -131,6 +135,7 @@
 <script>
 import Comment from "./Comment";
 import truncate from "vue-truncate-collapsed";
+import Postmodal from "./Postmodal";
 import axios from "axios";
 import qs from "qs";
 export default {
@@ -138,7 +143,8 @@ export default {
   props: ["post"],
   components: {
     truncate,
-    Comment
+    Comment,
+    Postmodal
   },
   data() {
     return {
