@@ -3,7 +3,7 @@
     <!-- Right -->
     <v-navigation-drawer v-if="auth" v-model="drawerRight" app clipped right dark>
       <v-list v-if="auth" dark dense>
-        <v-list-group color="dark" prepend-icon="mdi-account-multiple" value="true">
+        <!-- <v-list-group color="dark" prepend-icon="mdi-account-multiple" value="true">
           <template v-slot:activator>
             <v-list-item-title dark>Online Friends</v-list-item-title>
           </template>
@@ -33,30 +33,21 @@
               </v-list-item-icon>
             </v-list-item-action>
           </v-list-item>
-        </v-list-group>
+        </v-list-group>-->
         <v-list-group color="dark" prepend-icon="mdi-account-multiple" value="true">
           <template v-slot:activator>
-            <v-list-item-title dark>Friends</v-list-item-title>
+            <v-list-item-title dark>Following</v-list-item-title>
           </template>
-          <v-list-item>
+          <v-list-item
+            v-for="(people, i) in friends"
+            :key="i"
+            :to="{ name: 'profile', params: {username: people.username}}"
+          >
             <v-list-item-avatar>
               <v-img :src="photo"></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <v-list-item-title>Vishal Gaur</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-action>
-              <v-list-item-icon>
-                <v-icon color="green">mdi-circle-small</v-icon>
-              </v-list-item-icon>
-            </v-list-item-action>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-avatar>
-              <v-img :src="photo"></v-img>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>Vashist Hegde</v-list-item-title>
+              <v-list-item-title>{{ people.name }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-list-item-icon>
@@ -77,7 +68,8 @@
               src="https://c7.uihere.com/files/203/717/254/social-science-global-perspectives-social-media-world-business-social-media.jpg"
             ></v-img>
           </v-avatar>
-        </router-link>SocialX
+          <span>SocialX</span>
+        </router-link>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -99,7 +91,10 @@
       <v-list dark dense>
         <v-list-item>
           <v-avatar class="mx-auto" size="150">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSry6wge2X4Kc4dPVlwhL8sLBRzJF-7xTKu_IqCaebGD5ugW9XY&s" alt="John" />
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSry6wge2X4Kc4dPVlwhL8sLBRzJF-7xTKu_IqCaebGD5ugW9XY&s"
+              alt="John"
+            />
           </v-avatar>
         </v-list-item>
         <v-list-item>
@@ -162,6 +157,7 @@ export default {
     drawer: null,
     user: {},
     sugges: [],
+    friends: [],
     drawerRight: null,
     right: false,
     left: false,
@@ -172,10 +168,21 @@ export default {
     if (this.$session.get("jwt")) {
       this.user = this.$session.get("user").user;
       axios.get("/users/" + this.user.username + "/suggestions").then(res => {
-        res.data.data.forEach(username => {
-          axios.get("/users/" + username).then(r => {
+        res.data.data.forEach(suggestion => {
+          axios.get("/users/" + suggestion).then(r => {
             this.sugges.push({
-              name: r.data.data.User.name,
+              name: r.data.data.name,
+              username: r.data.data.username
+            });
+          });
+        });
+      });
+
+      axios.get("/users/" + this.user.username + "/following").then(res => {
+        res.data.data.forEach(follow => {
+          axios.get("/users/" + follow).then(r => {
+            this.friends.push({
+              name: r.data.data.name,
               username: r.data.data.username
             });
           });
