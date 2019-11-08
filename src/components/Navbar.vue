@@ -175,7 +175,7 @@ export default {
         res.data.data.forEach(username => {
           axios.get("/users/" + username).then(r => {
             this.sugges.push({
-              name: r.data.data.name,
+              name: r.data.data.User.name,
               username: r.data.data.username
             });
           });
