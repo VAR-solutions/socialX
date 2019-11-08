@@ -24,12 +24,12 @@
 
 
               <v-layout align-center justify-center>
-                <v-icon>mdi-account</v-icon>
+                <!-- <v-icon>mdi-account</v-icon> -->
                 {{user.name}}
               </v-layout>
 
               <v-layout v-if="user.email" align-center justify-center>
-                <v-icon>mdi-at</v-icon>
+                <!-- <v-icon>mdi-at</v-icon> -->
                 {{user.email}}
               </v-layout>
 
@@ -56,7 +56,7 @@
       <!-- followers -->
       <div class="text-center">
     <v-dialog
-      v-model="dialog"
+      v-model="dialog1"
       width="500"
     >
       <template v-slot:activator="{ on }">
@@ -100,7 +100,7 @@
     <!-- following -->
       <div class="text-center">
     <v-dialog
-      v-model="dialog"
+      v-model="dialog2"
       width="500"
     >
       <template v-slot:activator="{ on }">
@@ -214,13 +214,25 @@
       </v-flex>-->
 
       <!-- posts -->
-
-      <v-flex xs12 sm12 md12 lg12 pt-0 mt-0>
+      
+      <v-flex xs12>
+        <v-container grid-list-sm align-content-space-between>
         <v-layout row wrap>
-          <v-flex xs12>
-            <Post v-for="(i,key) in posts" :key="key" :post="i" />
-          </v-flex>
+              <v-flex v-for="(i,key) in posts" :key="key" :post="i"  xs6 sm4 md4 lg4>
+            <!-- <Post v-for="(i,key) in posts" :key="key" :post="i" /> -->
+            
+    <v-dialog v-model="dialog" width="1000px">
+      <template v-slot:activator="{ on }">
+            <v-img v-on="on" src="https://cdn.vuetifyjs.com/images/cards/docks.jpg">
+            </v-img>
+      </template>
+      <Postmodal />
+    </v-dialog>
+            
+              </v-flex>
+         
         </v-layout>
+        </v-container>
       </v-flex>
     </v-layout>
   </v-container>
@@ -260,13 +272,17 @@
 <script>
 import axios from "axios";
 import Post from "../components/Post";
+import Postmodal from "../components/Postmodal"
 export default {
   name: "profile",
+
   props: ["username"],
   data() {
     return {
       user: null,
       posts: [],
+      dialog1: false,
+      dialog2: false,
       dialog: false,
       followers: [],
       following: [],
@@ -274,7 +290,8 @@ export default {
   },
 
   components: {
-    Post
+    Post,
+    Postmodal
   },
 
   created() {
