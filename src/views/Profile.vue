@@ -121,7 +121,19 @@
         </v-card-title>
 
         <v-card-text>
-         List of following will be here
+          <v-list-item v-for="follower in followers" :key="follower.name" >
+            <v-list-item-avatar >
+              <v-img src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"></v-img>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title v-text="follower.name"></v-list-item-title>
+            </v-list-item-content>
+
+            <v-list-item-icon>
+              <v-icon>chat</v-icon>
+            </v-list-item-icon>
+          </v-list-item>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -250,11 +262,14 @@ import axios from "axios";
 import Post from "../components/Post";
 export default {
   name: "profile",
+  props: ["username"],
   data() {
     return {
       user: null,
       posts: [],
-      dialog: false
+      dialog: false,
+      followers: [],
+      following: [],
     };
   },
 
@@ -269,6 +284,19 @@ export default {
         this.posts.push(post);
       });
     });
+    // console.log(this.username);
+    axios.get("/users/" + this.username + "/followers").then(res => {
+      let userDetails = {}
+      res.data.forEach(follower => {
+        console.log(follower)
+        userDetails["username"] = follower
+        axios.get("/users/" + follower).then(userdata => {
+          userDetails["name"] = userdata.data.name;
+        })
+        this.followers.push(userDetails);
+      })
+      console.log(this.followers)
+    })
   }
 };
 </script>
