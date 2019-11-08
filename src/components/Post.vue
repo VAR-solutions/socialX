@@ -1,30 +1,28 @@
 <template>
   <v-container fluid px-0 pt-0 pb-1>
-   
-    <v-card elevation="2" class="mx-auto abc open test mt-3 mx-1" light  max-width="550">
-      
+    <v-card elevation="2" class="mx-auto abc open test mt-3 mx-1" light max-width="550">
       <div class="padd">
         <v-card-title class="pt-0">
           <v-layout align-center row wrap>
             <v-flex xs2 sm2>
-              <!-- <router-link :to="{  name: 'Profile', params: {username}}"> -->
-              <v-avatar color="black" justify-center>
-                <v-img :src="photo"></v-img>
-              </v-avatar>
-              <!-- </router-link> -->
+              <router-link :to="{  name: 'profile', params: {username}}">
+                <v-avatar color="black" size="52" justify-center>
+                  <v-img :src="photo"></v-img>
+                </v-avatar>
+              </router-link>
             </v-flex>
             <v-flex xs10 sm10>
-              <v-layout ma-3 row wrap>
+              <v-layout mt-2 mr-1 row wrap>
                 <v-flex>
                   <v-layout row wrap>
                     <v-flex grow>
-                      <strong>{{ name }}</strong>
+                      <strong class="headline">{{ username }}</strong>
                     </v-flex>
                     <v-flex class="text-right" xs1 align-self-end shrink>
                       <v-icon color="black">mdi-dots-horizontal</v-icon>
                     </v-flex>
                     <v-flex xs12>
-                      <small>{{ post.posted_on | moment("from") }}</small>
+                      <small class="overline">{{ post.posted_on | moment("from") }}</small>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -43,66 +41,83 @@
             <v-row align="center" justify="end"><small>{{post.posted_on | moment("from") }}</small></v-row>
           </v-list-item>-->
         </v-card-title>
-        <v-img
-      class="white--text align-end"
-      height="250px"
-      src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-    >
-
-    </v-img>
-
-        <v-card-text class="py-0 pl-1">
+        <v-card-text class="pa-0 subtitle-1 pb-1">
           <truncate clamp="show more" :length="90" less="show less" type="html" :text="p"></truncate>
         </v-card-text>
-        <div class="pl-1">
-          <small>
-            {{this.likecount}} Likes
-            <span class="mr-1">·</span>
-            {{this.commentcount}} Comments
-          </small>
+
+        <v-img
+          class="white--text align-end"
+          height="250px"
+          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+        ></v-img>
+
+        <div class="px-0 ma-0 py-1">
+          <p class="font-weight-light ma-0 pa-0">
+            {{this.likecount}} Likes &nbsp;
+            <span>·</span>
+            {{this.commentcount}} &nbsp; Comments
+          </p>
         </div>
         <v-divider></v-divider>
         <v-card-actions class="pa-0">
-          <v-btn class="pa-0" text fab  slot="activator" color="grey darken-1">
+          <v-btn class="pa-0" text fab slot="activator" color="grey darken-1">
             <v-icon @click="liketoggle" v-bind:id="this.post.id">mdi-thumb-up</v-icon>
           </v-btn>
-           <!-- <div slot="activator" v-bind:id="this.post.id">
+          <!-- <div slot="activator" v-bind:id="this.post.id">
           
-           </div> -->
-          <v-btn class="pa-0" @click="show = !show" text fab color="grey darken-1">
-            <v-icon>mdi-comment</v-icon>
-          </v-btn>
+          </div>-->
+          <!-- <template v-slot:activator="{ on }"> -->
+            <v-btn class="pa-0 ma-0" v-on="on" @click="show = !show; commentsModal = true" text fab color="grey darken-1">
+              <v-icon>mdi-comment</v-icon>
+            </v-btn>
+          <!-- </template> -->
         </v-card-actions>
-        <v-form ref="form" v-show="show" box auto-grow v-model="valid" lazy-validation>
-          <v-container>
-            <v-layout row wrap>
-              <v-flex xs12>
-                <v-textarea
-                  v-model="mycomment"
-                  solo
-                  no-resize
-                  hide-details
-                  label="Comment"
-                  placeholder="Your Comment Here"
-                  rows="2"
-                  required
-                >
-                  <template slot="append-outer">
-                    <v-icon size="40" color="rgb(24,103,192)" @click="validate">mdi-comment-plus</v-icon>
-                  </template>
-                </v-textarea>
-              </v-flex>
-            </v-layout>
-          </v-container>
+        <v-form ref="form" box auto-grow v-model="valid" lazy-validation>
+          <!-- <v-container> -->
+          <v-layout row wrap class="ma-1 pb-2">
+            <v-flex xs12>
+              <v-textarea
+                v-model="mycomment"
+                solo
+                dense
+                no-resize
+                full-width
+                hide-details
+                label="Comment"
+                placeholder="Your Comment Here"
+                rows="1"
+                required
+              >
+                <template slot="append-outer">
+                  <v-icon size="32" color="rgb(24,103,192)" @click="validate">mdi-comment-plus</v-icon>
+                </template>
+              </v-textarea>
+            </v-flex>
+          </v-layout>
+          <!-- </v-container> -->
         </v-form>
-        <Comment
-          v-show="show"
-          v-for="(com,k) in this.post.comments"
-          :key="k"
-          :count="commentcount"
-          :pr="k"
-          :comment="com"
-        />
+
+        <!-- Dialog for Comments -->
+
+        <v-dialog v-model="commentsModal" scrollable max-width="450px">
+          <v-card>
+            <v-card-title>Comments
+              <v-spacer></v-spacer>
+              <v-icon @click="commentsModal = false">mdi-close</v-icon>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 300px;">
+              <Comment
+                v-show="show"
+                v-for="(com,k) in this.post.comments"
+                :key="k"
+                :count="commentcount"
+                :pr="k"
+                :comment="com"
+              />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </div>
     </v-card>
     <v-spacer></v-spacer>
@@ -141,7 +156,8 @@ export default {
       username: "",
       snackbar: false,
       p: "",
-      name: ""
+      name: "",
+      commentsModal: false
     };
   },
   mounted() {
@@ -240,11 +256,11 @@ export default {
   border-radius: 12px;
 }
 .likedcolor {
-  color: rgb(24,103,192) !important;
+  color: rgb(24, 103, 192) !important;
   /* color: rgb(76, 217, 100) !important; */
 }
 .test {
-  border-bottom: 3.5px solid rgb(24,103,192) !important;
+  border-bottom: 3.5px solid rgb(24, 103, 192) !important;
 }
 .flexfix {
   align-items: unset !important;

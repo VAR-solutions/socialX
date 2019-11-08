@@ -2,22 +2,19 @@
   <v-container fluid grid-list-md pa-1>
     <v-layout row wrap>
       <v-flex xs2 sm1>
-        <!-- <router-link :to="{  name: 'Profile', params: {username}}"> -->
-        <v-avatar>
-          <v-img :src="photo"></v-img>
+        <router-link :to="{  name: 'profile', params: {username: comment.postedBy}}">
+        <v-avatar >
+          <v-img :src="photo" ></v-img>
         </v-avatar>
-        <!-- </router-link> -->
+        </router-link>
       </v-flex>
       <v-flex xs10 sm11>
         <v-layout row wrap>
           <v-flex>
             <v-layout row wrap>
-              <v-flex xs10>
-                <strong>{{ name}}</strong>
-              </v-flex>
-              <v-flex xs2 class="text-xs-right">
+                <strong >{{ name}}</strong>
+                <v-spacer></v-spacer>
                 <small>{{comment.created| moment("from") }}</small>
-              </v-flex>
               <v-flex xs12>
                 <template>
                   <p
