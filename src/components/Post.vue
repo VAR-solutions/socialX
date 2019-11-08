@@ -180,7 +180,7 @@ export default {
     this.photo =
       "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light";
     axios.get("/users/" + this.username).then(res => {
-      this.name = res.data.name;
+      this.name = res.data.data.name;
     });
   },
   methods: {

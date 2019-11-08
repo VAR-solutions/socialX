@@ -279,23 +279,21 @@ export default {
 
   created() {
     this.user = this.$session.get("user").user;
-    axios.get("/posts/").then(res => {
-      res.data.data.posts.forEach(post => {
+    axios.get("/posts/" + this.$route.params.username).then(res => {
+      res.data.data.forEach(post => {
         this.posts.push(post);
       });
     });
     // console.log(this.username);
-    axios.get("/users/" + this.username + "/followers").then(res => {
+    axios.get("/users/" + this.$route.params.username + "/followers").then(res => {
       let userDetails = {}
-      res.data.forEach(follower => {
-        console.log(follower)
+      res.data.data.forEach(follower => {
         userDetails["username"] = follower
         axios.get("/users/" + follower).then(userdata => {
-          userDetails["name"] = userdata.data.name;
+          userDetails["name"] = userdata.data.data.name;
         })
         this.followers.push(userDetails);
       })
-      console.log(this.followers)
     })
   }
 };

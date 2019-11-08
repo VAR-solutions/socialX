@@ -55,7 +55,7 @@ export default {
   },
   created() {
     axios.get("/users/" + this.comment.postedBy).then(res => {
-      this.name = res.data.name;
+      this.name = res.data.data.name;
     });
     this.username = this.comment.postedby;
   }

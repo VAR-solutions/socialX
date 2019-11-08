@@ -79,7 +79,7 @@ export default {
   },
   created() {
     axios.get("/posts").then(res => {
-      res.data.data.posts.forEach(element => {
+      res.data.data.forEach(element => {
         this.posts.push(element);
       });
     });

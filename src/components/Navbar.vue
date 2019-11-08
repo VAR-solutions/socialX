@@ -172,11 +172,11 @@ export default {
     if (this.$session.get("jwt")) {
       this.user = this.$session.get("user").user;
       axios.get("/users/" + this.user.username + "/suggestions").then(res => {
-        res.data.forEach(username => {
+        res.data.data.forEach(username => {
           axios.get("/users/" + username).then(r => {
             this.sugges.push({
-              name: r.data.name,
-              username: r.data.username
+              name: r.data.data.User.name,
+              username: r.data.data.username
             });
           });
         });
