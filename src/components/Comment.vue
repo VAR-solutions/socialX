@@ -1,14 +1,14 @@
 <template>
   <v-container fluid grid-list-md pa-1>
     <v-layout row wrap>
-      <v-flex xs2 sm1>
+      <v-flex xs2>
         <router-link :to="{  name: 'profile', params: {username: comment.postedBy}}">
           <v-avatar>
             <v-img :src="photo"></v-img>
           </v-avatar>
         </router-link>
       </v-flex>
-      <v-flex xs10 sm11>
+      <v-flex xs10>
         <v-layout row wrap>
           <v-flex>
             <v-layout row wrap>
