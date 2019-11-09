@@ -5,7 +5,7 @@
     </v-flex>
 
     <v-flex xs12 sm12 md5 lg4 id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
-      <v-card elevation="0">
+      <v-card elevation="0" color="#212121">
         <v-card-title>Comments</v-card-title>
         <v-card-text style="height:100%">
           <Comment
