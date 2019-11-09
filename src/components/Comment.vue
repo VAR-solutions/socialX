@@ -3,18 +3,18 @@
     <v-layout row wrap>
       <v-flex xs2 sm1>
         <router-link :to="{  name: 'profile', params: {username: comment.postedBy}}">
-        <v-avatar >
-          <v-img :src="photo" ></v-img>
-        </v-avatar>
+          <v-avatar>
+            <v-img :src="photo"></v-img>
+          </v-avatar>
         </router-link>
       </v-flex>
       <v-flex xs10 sm11>
         <v-layout row wrap>
           <v-flex>
             <v-layout row wrap>
-                <strong >{{ name}}</strong>
-                <v-spacer></v-spacer>
-                <small>{{comment.created| moment("from") }}</small>
+              <strong>{{ name}}</strong>
+              <v-spacer></v-spacer>
+              <small>{{comment.created| moment("from") }}</small>
               <v-flex xs12>
                 <template>
                   <p
@@ -53,8 +53,21 @@ export default {
   created() {
     axios.get("/users/" + this.comment.postedBy).then(res => {
       this.name = res.data.data.name;
+      if (res.data.data.dp) {
+        this.photo =
+          "data:image/jpeg;base64," +
+          this.arrayBufferToBase64(res.data.data.dp.data.data);
+      }
     });
     this.username = this.comment.postedby;
+  },
+  methods: {
+    arrayBufferToBase64(buffer) {
+      var binary = "";
+      var bytes = [].slice.call(new Uint8Array(buffer));
+      bytes.forEach(b => (binary += String.fromCharCode(b)));
+      return window.btoa(binary);
+    }
   }
 };
 </script>

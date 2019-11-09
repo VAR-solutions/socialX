@@ -6,7 +6,7 @@
           <v-layout align-center row wrap>
             <v-flex xs2 sm2>
               <router-link :to="{  name: 'profile', params: {username}}">
-                <v-avatar color="black" size="52" justify-center>
+                <v-avatar size="52" justify-center>
                   <v-img :src="photo"></v-img>
                 </v-avatar>
               </router-link>
@@ -29,17 +29,6 @@
               </v-layout>
             </v-flex>
           </v-layout>
-          <!-- <v-list-item class="grow">
-            <v-list-item-avatar color="grey darken-3">
-              <v-img class="elevation-6" :src="photo"></v-img>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title>{{ name }}</v-list-item-title>
-            </v-list-item-content>
-
-            <v-row align="center" justify="end"><small>{{post.posted_on | moment("from") }}</small></v-row>
-          </v-list-item>-->
         </v-card-title>
         <v-card-text class="pa-0 subtitle-1 pb-1">
           <truncate clamp="show more" :length="90" less="show less" type="html" :text="p"></truncate>
@@ -68,10 +57,6 @@
           <v-btn class="pa-0" text fab slot="activator" color="grey darken-1">
             <v-icon @click="liketoggle" v-bind:id="this.post.id">mdi-thumb-up</v-icon>
           </v-btn>
-          <!-- <div slot="activator" v-bind:id="this.post.id">
-          
-          </div>-->
-          <!-- <template v-slot:activator="{ on }"> -->
           <v-btn
             class="pa-0 ma-0"
             v-on="on"
@@ -121,7 +106,6 @@
             <v-divider></v-divider>
             <v-card-text style="height: 300px;">
               <Comment
-                v-show="show"
                 v-for="(com,k) in this.post.comments"
                 :key="k"
                 :count="commentcount"
@@ -178,33 +162,13 @@ export default {
   },
   mounted() {
     this.post.likes.forEach(ele => {
-      if (ele == this.$session.get("user").user.username) {
+      if (ele == this.$store.state.user.username) {
         this.likecurr = true;
         document.getElementById(this.post.id).classList.add("likedcolor");
       }
     });
   },
   created() {
-    // this.likecurr = this.liked[this.experience.id]
-    // this.likecurr[this.experience.id] = false
-
-    // let ref = db
-    //   .firestore()
-    //   .collection("experiences")
-    //   .doc(this.experience.id)
-    //   .get()
-    //   .then(doc => {
-    //     doc.data().likes.forEach(like => {
-    //       if (this.$store.getters.isAuthenticated) {
-    //         if (like == this.$store.getters.userdata.email) {
-    //           this.likecurr = true;
-    //           document
-    //             .getElementById(this.experience.id)
-    //             .classList.add("likedcolor");
-    //         }
-    //       }
-    //     });
-    //   });
     this.username = this.post.username;
     this.likecount = this.post.likes.length;
     this.commentcount = this.post.comments.length;
@@ -213,14 +177,25 @@ export default {
       "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light";
     axios.get("/users/" + this.username).then(res => {
       this.name = res.data.data.name;
+      if (res.data.data.dp) {
+        this.photo =
+          "data:image/jpeg;base64," +
+          this.arrayBufferToBase64(res.data.data.dp.data.data);
+      }
     });
   },
   methods: {
+    arrayBufferToBase64(buffer) {
+      var binary = "";
+      var bytes = [].slice.call(new Uint8Array(buffer));
+      bytes.forEach(b => (binary += String.fromCharCode(b)));
+      return window.btoa(binary);
+    },
     validate() {
       if (this.mycomment) {
         this.post.comments.push({
           content: this.mycomment,
-          postedBy: this.$session.get("user").user.username,
+          postedBy: this.$store.state.user.username,
           created: Date.now()
         });
         axios.post(
@@ -228,7 +203,7 @@ export default {
           qs.stringify({
             post_id: this.post.id,
             content: this.mycomment,
-            username: this.$session.get("user").user.username
+            username: this.$store.state.user.username
           })
         );
         this.commentcount = this.post.comments.length;
@@ -244,7 +219,7 @@ export default {
         axios.post(
           "/posts/" + this.post.id + "/like",
           qs.stringify({
-            username: this.$session.get("user").user.username,
+            username: this.$store.state.user.username,
             post_id: this.post.id
           })
         );
@@ -253,7 +228,7 @@ export default {
         axios.post(
           "/posts/" + this.post.id + "/unlike",
           qs.stringify({
-            username: this.$session.get("user").user.username,
+            username: this.$store.state.user.username,
             post_id: this.post.id
           })
         );

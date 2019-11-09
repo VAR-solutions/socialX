@@ -8,9 +8,7 @@
             <v-flex xs12 sm12 md6 lg6>
               <v-layout align-center justify-center>
                 <v-avatar size="170" class="align-center">
-                  <img
-                    src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
-                  />
+                  <img :src="dp" />
                 </v-avatar>
               </v-layout>
             </v-flex>
@@ -33,9 +31,12 @@
                 {{user.mobile}}
               </v-layout>
 
-              <v-layout v-if="user.location" align-center justify-start>
-                <v-icon>mdi-location</v-icon>
-                {{user.location}}
+              <v-layout v-if="user.location" align-center justify-start>{{user.location}}</v-layout>
+              <v-layout align-center justify-start>
+                <v-btn v-if="notinfollowings" @click="follow">Follow</v-btn>
+              </v-layout>
+              <v-layout align-center justify-start>
+                <v-btn v-if="infollowings" @click="unfollow">Unfollow</v-btn>
               </v-layout>
             </v-flex>
           </v-layout>
@@ -112,7 +113,7 @@
           <v-layout row wrap>
             <v-flex v-for="(i,key) in posts" :key="key" :post="i" xs6 sm4 md4 lg4>
               <!-- <Post v-for="(i,key) in posts" :key="key" :post="i" /> -->
-              <v-dialog max-width="1000px" >
+              <v-dialog max-width="1000px">
                 <template v-slot:activator="{ on }">
                   <v-img
                     v-on="on"
@@ -123,7 +124,6 @@
                 </template>
                 <Postmodal :post="i" />
               </v-dialog>
-              
             </v-flex>
           </v-layout>
         </v-container>
@@ -134,6 +134,7 @@
 
 <script>
 import axios from "axios";
+import qs from "qs";
 import Post from "../components/Post";
 import Postmodal from "../components/Postmodal";
 export default {
@@ -143,11 +144,16 @@ export default {
     return {
       user: {},
       posts: [],
+      dp: "",
       dialog1: false,
       dialog2: false,
       dialog: false,
       followers: [],
-      following: []
+      following: [],
+      notinfollowings: false,
+      infollowings: false,
+      photo:
+        "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
     };
   },
 
@@ -161,16 +167,65 @@ export default {
       var bytes = [].slice.call(new Uint8Array(buffer));
       bytes.forEach(b => (binary += String.fromCharCode(b)));
       return window.btoa(binary);
+    },
+    follow() {
+      axios
+        .post(
+          "/users/follow",
+          qs.stringify({
+            user2: this.username
+          })
+        )
+        .then(res => {
+          console.log(res);
+          this.notinfollowings = false;
+          this.infollowings = true;
+          let user = this.$session.get("user");
+          user.following.push(this.username);
+          this.$session.set("user", user);
+        });
+    },
+    unfollow() {
+      axios
+        .post(
+          "/users/unfollow",
+          qs.stringify({
+            user2: this.username
+          })
+        )
+        .then(res => {
+          console.log(res);
+          this.infollowings = false;
+          this.notinfollowings = true;
+          let user = this.$session.get("user");
+          user.following = user.following.filter(function(e) {
+            return e != this.username;
+          });
+          this.$session.set("user", user);
+        });
     }
-  },
-  beforeCreate() {
-    axios.get("/users/" + this.$route.params.username).then(res => {
-      this.user = res.data.data;
-    });
   },
   created() {
     //   console.log(this);
     // this.user = this.$session.get("user").user;
+    if (this.$session.get("user").following.includes(this.username)) {
+      this.notinfollowings = false;
+      this.infollowings = true;
+    } else {
+      this.notinfollowings = true;
+      this.infollowings = false;
+    }
+
+    axios.get("/users/" + this.$route.params.username).then(res => {
+      this.user = res.data.data;
+      if (this.user.dp) {
+        this.dp =
+          "data:image/jpeg;base64," +
+          this.arrayBufferToBase64(this.user.dp.data.data);
+      } else {
+        this.dp = this.photo;
+      }
+    });
 
     axios.get("/posts/" + this.$route.params.username).then(res => {
       res.data.data.forEach(post => {

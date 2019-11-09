@@ -68,10 +68,11 @@ export default {
       };
       this.$store.dispatch("login", data).then(res => {
         this.$session.start();
-        this.$session.set("jwt", res.data.data.token);
+        this.$session.set("jwt", res.data.token);
         this.$session.set("user", res.data.data);
-        axios.defaults.headers.common["x-access-token"] = res.data.data.token;
+        axios.defaults.headers.common["x-access-token"] = res.data.token;
         this.$router.push({ name: "dashboard" });
+        location.reload();
       });
     }
   }

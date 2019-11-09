@@ -21,16 +21,26 @@ export default {
       axios.defaults.headers.common["x-access-token"] = this.$session.get(
         "jwt"
       );
-      let user = this.$session.get("user").user;
+      let user = this.$session.get("user");
       axios.get("/users/" + user.username).then(res => {
-        this.$store.commit("SET_USER", user);
+        this.$store.commit("SET_USER", res.data.data);
+        this.$session.set("user", res.data.data);
       });
     }
   },
   computed: {
+    // username() {
+    //   if (this.$session.exists()) {
+    //     return this.$session.get("user");
+    //   } else {
+    //     return "noauth";
+    //   }
+    // }
+  },
+  watch: {
     username() {
       if (this.$session.exists()) {
-        return "auth";
+        return this.$session.get("user");
       } else {
         return "noauth";
       }
