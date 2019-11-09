@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <Navbar></Navbar>
+    <Navbar :key="username"></Navbar>
     <v-content>
       <router-view></router-view>
     </v-content>
@@ -15,9 +15,7 @@ export default {
   components: {
     Navbar
   },
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
   beforeCreate() {
     if (this.$session.exists()) {
       axios.defaults.headers.common["x-access-token"] = this.$session.get(
@@ -28,6 +26,18 @@ export default {
         this.$store.commit("SET_USER", user);
       });
     }
+  },
+  computed: {
+    username() {
+      if (this.$session.exists()) {
+        return "auth";
+      } else {
+        return "noauth";
+      }
+    }
+  },
+  updated() {
+    this.username;
   }
 };
 </script>

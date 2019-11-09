@@ -1,0 +1,198 @@
+<template>
+  <v-container fluid>
+    <v-layout row wrap pt-0 mt-0>
+      <!-- profile -->
+      <v-flex d-flex xs12 sm12 md12 lg12 pt-0 mt-0 shrink>
+        <v-card width="100%" mt-1 elevation="0" color="#303030">
+          <v-layout row wrap>
+            <v-flex xs12 sm12 md6 lg6>
+              <v-layout align-center justify-center>
+                <v-avatar size="170" class="align-center">
+                  <img
+                    src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
+                  />
+                </v-avatar>
+              </v-layout>
+            </v-flex>
+
+            <v-flex xs12 sm12 md6 lg6>
+              <v-layout align-center justify-start>{{user.username}}</v-layout>
+
+              <v-layout align-center justify-start>
+                <!-- <v-icon>mdi-account</v-icon> -->
+                {{user.name}}
+              </v-layout>
+
+              <v-layout v-if="user.email" align-center justify-start>
+                <!-- <v-icon>mdi-at</v-icon> -->
+                {{user.email}}
+              </v-layout>
+
+              <v-layout v-if="user.mobile" align-center justify-start>
+                <!-- <v-icon>mdi-phone</v-icon> -->
+                {{user.mobile}}
+              </v-layout>
+
+              <v-layout v-if="user.location" align-center justify-start>
+                <v-icon>mdi-location</v-icon>
+                {{user.location}}
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-card>
+      </v-flex>
+
+      <!-- followers/following -->
+      <v-flex>
+        <v-layout align-center justify-center>
+          <!-- followers -->
+          <div class="text-center">
+            <v-dialog v-model="dialog1" width="500">
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">Followers</v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>Followers</v-card-title>
+
+                <v-card-text>List of followers will be here</v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="dialog = false">Done</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+
+          <!-- following -->
+          <div class="text-center">
+            <v-dialog v-model="dialog2" width="500">
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">Following</v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>Following</v-card-title>
+
+                <v-card-text>
+                  <v-list-item v-for="follower in followers" :key="follower.name">
+                    <v-list-item-avatar>
+                      <v-img
+                        src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
+                      ></v-img>
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                      <v-list-item-title v-text="follower.name"></v-list-item-title>
+                    </v-list-item-content>
+
+                    <v-list-item-icon>
+                      <v-icon>chat</v-icon>
+                    </v-list-item-icon>
+                  </v-list-item>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="dialog = false">Done</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+        </v-layout>
+      </v-flex>
+
+      <v-flex xs12>
+        <v-container grid-list-sm align-content-space-between>
+          <v-layout row wrap>
+            <v-flex v-for="(i,key) in posts" :key="key" :post="i" xs6 sm4 md4 lg4>
+              <!-- <Post v-for="(i,key) in posts" :key="key" :post="i" /> -->
+
+              <v-dialog v-model="dialog" width="1000px">
+                <template v-slot:activator="{ on }">
+                  <v-img v-on="on" :src="'data:image/jpeg;base64,'+ i.photo"></v-img>
+                </template>
+                <Postmodal :post="i" />
+              </v-dialog>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-flex>
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+import axios from "axios";
+import Post from "../components/Post";
+import Postmodal from "../components/Postmodal";
+export default {
+  name: "profile",
+  props: ["username"],
+  data() {
+    return {
+      user: {},
+      posts: [],
+      dialog1: false,
+      dialog2: false,
+      dialog: false,
+      followers: [],
+      following: []
+    };
+  },
+
+  components: {
+    Post,
+    Postmodal
+  },
+  methods: {
+    arrayBufferToBase64(buffer) {
+      var binary = "";
+      var bytes = [].slice.call(new Uint8Array(buffer));
+      bytes.forEach(b => (binary += String.fromCharCode(b)));
+      return window.btoa(binary);
+    }
+  },
+  beforeCreate() {
+    axios.get("/users/" + this.$route.params.username).then(res => {
+      this.user = res.data.data;
+    });
+  },
+  created() {
+    //   console.log(this);
+    // this.user = this.$session.get("user").user;
+
+    axios.get("/posts/" + this.$route.params.username).then(res => {
+      res.data.data.forEach(post => {
+        post.photo = this.arrayBufferToBase64(post.photo.data.data);
+        this.posts.push(post);
+      });
+    });
+    // console.log(this.username);
+    axios
+      .get("/users/" + this.$route.params.username + "/followers")
+      .then(res => {
+        let userDetails = {};
+        res.data.data.forEach(follower => {
+          userDetails["username"] = follower;
+          axios.get("/users/" + follower).then(userdata => {
+            userDetails["name"] = userdata.data.data.name;
+          });
+          this.followers.push(userDetails);
+        });
+      });
+  }
+};
+</script>
+
+<style scoped>
+.resp {
+  width: 100%;
+  height: auto;
+}
+</style>

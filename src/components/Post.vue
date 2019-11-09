@@ -44,16 +44,17 @@
         <v-card-text class="pa-0 subtitle-1 pb-1">
           <truncate clamp="show more" :length="90" less="show less" type="html" :text="p"></truncate>
         </v-card-text>
-       <v-dialog v-model="dialog" width="1000px">
-      <template v-slot:activator="{ on }">
-        <v-img v-on="on"
-          class="white--text align-end"
-          height="250px"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        ></v-img>
-      </template>
-      <Postmodal />
-       </v-dialog>
+        <v-dialog width="1000px">
+          <template v-slot:activator="{ on }">
+            <v-img
+              v-on="on"
+              class="white--text align-end"
+              height="250px"
+              :src="'data:image/jpeg;base64,'+post.photo"
+            ></v-img>
+          </template>
+          <Postmodal :post="post" />
+        </v-dialog>
 
         <div class="px-0 ma-0 py-1">
           <p class="font-weight-light ma-0 pa-0">
@@ -71,9 +72,16 @@
           
           </div>-->
           <!-- <template v-slot:activator="{ on }"> -->
-            <v-btn class="pa-0 ma-0" v-on="on" @click="show = !show; commentsModal = true" text fab color="grey darken-1">
-              <v-icon>mdi-comment</v-icon>
-            </v-btn>
+          <v-btn
+            class="pa-0 ma-0"
+            v-on="on"
+            @click="show = !show; commentsModal = true"
+            text
+            fab
+            color="grey darken-1"
+          >
+            <v-icon>mdi-comment</v-icon>
+          </v-btn>
           <!-- </template> -->
         </v-card-actions>
         <v-form ref="form" box auto-grow v-model="valid" lazy-validation>
@@ -105,7 +113,8 @@
 
         <v-dialog v-model="commentsModal" scrollable max-width="450px">
           <v-card>
-            <v-card-title>Comments
+            <v-card-title>
+              Comments
               <v-spacer></v-spacer>
               <v-icon @click="commentsModal = false">mdi-close</v-icon>
             </v-card-title>
@@ -163,7 +172,8 @@ export default {
       snackbar: false,
       p: "",
       name: "",
-      commentsModal: false
+      commentsModal: false,
+      on: ""
     };
   },
   mounted() {
