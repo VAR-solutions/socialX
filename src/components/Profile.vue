@@ -177,12 +177,14 @@ export default {
           })
         )
         .then(res => {
-          console.log(res);
           this.notinfollowings = false;
           this.infollowings = true;
-          let user = this.$session.get("user");
-          user.following.push(this.username);
-          this.$session.set("user", user);
+          axios
+            .get("/users/" + this.$session.get("user").username)
+            .then(res => {
+              this.$session.set("user", res.data.data);
+              this.$store.commit("SET_USER", res.data.data);
+            });
         });
     },
     unfollow() {
@@ -194,20 +196,18 @@ export default {
           })
         )
         .then(res => {
-          console.log(res);
           this.infollowings = false;
           this.notinfollowings = true;
-          let user = this.$session.get("user");
-          user.following = user.following.filter(function(e) {
-            return e != this.username;
-          });
-          this.$session.set("user", user);
+          axios
+            .get("/users/" + this.$session.get("user").username)
+            .then(res => {
+              this.$session.set("user", res.data.data);
+              this.$store.commit("SET_USER", res.data.data);
+            });
         });
     }
   },
   created() {
-    //   console.log(this);
-    // this.user = this.$session.get("user").user;
     if (this.$session.get("user").following.includes(this.username)) {
       this.notinfollowings = false;
       this.infollowings = true;

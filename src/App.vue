@@ -10,12 +10,16 @@
 <script>
 import Navbar from "./components/Navbar";
 import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   name: "App",
   components: {
     Navbar
   },
-  data: () => ({}),
+  data: () => ({
+    username: -2
+  }),
   beforeCreate() {
     if (this.$session.exists()) {
       axios.defaults.headers.common["x-access-token"] = this.$session.get(
@@ -28,26 +32,13 @@ export default {
       });
     }
   },
-  computed: {
-    // username() {
-    //   if (this.$session.exists()) {
-    //     return this.$session.get("user");
-    //   } else {
-    //     return "noauth";
-    //   }
-    // }
-  },
-  watch: {
-    username() {
-      if (this.$session.exists()) {
-        return this.$session.get("user");
-      } else {
-        return "noauth";
+  created() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type == "SET_USER") {
+        this.username = state.user.following.length;
       }
-    }
+    });
   },
-  updated() {
-    this.username;
-  }
+  computed: mapState(["user"])
 };
 </script>
