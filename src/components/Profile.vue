@@ -112,13 +112,18 @@
           <v-layout row wrap>
             <v-flex v-for="(i,key) in posts" :key="key" :post="i" xs6 sm4 md4 lg4>
               <!-- <Post v-for="(i,key) in posts" :key="key" :post="i" /> -->
-
-              <v-dialog v-model="dialog" width="1000px">
+              <v-dialog max-width="1000px" >
                 <template v-slot:activator="{ on }">
-                  <v-img v-on="on" :src="'data:image/jpeg;base64,'+ i.photo"></v-img>
+                  <v-img
+                    v-on="on"
+                    class="white--text align-end"
+                    height="250px"
+                    :src="'data:image/jpeg;base64,'+ i.photo"
+                  ></v-img>
                 </template>
                 <Postmodal :post="i" />
               </v-dialog>
+              
             </v-flex>
           </v-layout>
         </v-container>

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid pa-0>
     <v-row justify="center">
-      <p>Have something on your mind ?</p>
+      <h1 class="regular font-weight-light mb-4">Have something on your mind ?</h1>
 
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
@@ -27,7 +27,7 @@
                     id="file"
                   ></v-file-input>-->
                   <label>
-                    File Preview
+                    Upload a Photo*
                     <input
                       type="file"
                       id="file"
