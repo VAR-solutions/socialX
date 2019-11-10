@@ -1,10 +1,10 @@
 <template>
   <v-layout row wrap class="ma-0 pa-0">
-    <v-flex fill xs12 sm12 md7 lg8 style="max-height: 400px">
-      <v-img height="400px" :src="'data:image/jpeg;base64,'+ this.post.photo"></v-img>
+    <v-flex fill xs12 sm12 md7 lg8 style="max-height: 530px">
+      <v-img height="530px" :src="'data:image/jpeg;base64,'+ this.post.photo"></v-img>
     </v-flex>
 
-    <v-flex xs12 sm12 md5 lg4 id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
+    <v-flex xs12 sm12 md5 lg4 id="scroll-target" style="max-height: 530px" class="overflow-y-auto">
       <v-card elevation="0">
         <v-card-title>Comments</v-card-title>
         <v-card-text style="height:100%">

@@ -7,6 +7,11 @@
           <template v-slot:activator>
             <v-list-item-title dark>Following</v-list-item-title>
           </template>
+          <v-list-item v-if="friends.length == 0">
+            <v-list-item-content>
+              <v-list-item-title>You have not followed anyone</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item
             v-for="(people, i) in friends"
             :key="i"
@@ -88,7 +93,11 @@
           <template v-slot:activator>
             <v-list-item-title dark>Discover Friends</v-list-item-title>
           </template>
-
+          <v-list-item v-if="sugges.length == 0">
+            <v-list-item-content>
+              <v-list-item-title>Nothing to Suggest</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item
             v-for="(people, i) in sugges"
             :key="i"

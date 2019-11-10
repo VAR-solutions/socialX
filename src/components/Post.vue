@@ -62,6 +62,7 @@
             v-on="on"
             @click="show = !show; commentsModal = true"
             text
+            :disabled="commentcount == 0"
             fab
             color="grey darken-1"
           >

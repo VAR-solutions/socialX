@@ -48,60 +48,67 @@
         <v-layout align-center justify-center>
           <!-- followers -->
           <div class="text-center">
-            <v-dialog v-model="dialog1" width="500">
+            <v-dialog v-model="followersModal" width="500">
               <template v-slot:activator="{ on }">
-                <v-btn text v-on="on">Followers</v-btn>
+                <v-btn text :disabled="followersCount == 0" v-on="on">{{followersCount}} &nbsp;Followers</v-btn>
               </template>
 
               <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>Followers</v-card-title>
+                <v-card-title>
+                  Followers
+                  <v-spacer></v-spacer>
+                  <v-icon @click="followersModal = false">mdi-close</v-icon>
+                </v-card-title>
+                <v-card-text>
+                  <v-list-item v-for="person in followers" :key="person.name">
+                    <v-list-item-avatar>
+                      <v-img :src="person.dp"></v-img>
+                    </v-list-item-avatar>
 
-                <v-card-text>List of followers will be here</v-card-text>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="person.name"></v-list-item-title>
+                    </v-list-item-content>
+
+                    <v-list-item-icon>
+                      <v-icon>mdi-account-plus</v-icon>
+                    </v-list-item-icon>
+                  </v-list-item>
+                </v-card-text>
 
                 <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" text @click="dialog = false">Done</v-btn>
-                </v-card-actions>
               </v-card>
             </v-dialog>
           </div>
 
           <!-- following -->
           <div class="text-center">
-            <v-dialog v-model="dialog2" width="500">
+            <v-dialog v-model="followingModal" width="500">
               <template v-slot:activator="{ on }">
-                <v-btn text v-on="on">Following</v-btn>
+                <v-btn text :disabled="followingCount == 0" v-on="on">{{followingCount}}&nbsp;Following</v-btn>
               </template>
 
               <v-card>
-                <v-card-title class="headline grey lighten-2" primary-title>Following</v-card-title>
+                <v-card-title>
+                  Following
+                  <v-spacer></v-spacer>
+                  <v-icon @click="followingModal = false">mdi-close</v-icon>
+                </v-card-title>
 
                 <v-card-text>
-                  <v-list-item v-for="follower in followers" :key="follower.name">
+                  <v-list-item v-for="person in following" :key="person.name">
                     <v-list-item-avatar>
-                      <v-img
-                        src="https://i.pinimg.com/originals/6e/c9/86/6ec9863ac0550bae46bd1a610255b0da.jpg"
-                      ></v-img>
+                      <v-img :src="person.dp"></v-img>
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-                      <v-list-item-title v-text="follower.name"></v-list-item-title>
+                      <v-list-item-title v-text="person.name"></v-list-item-title>
                     </v-list-item-content>
 
                     <v-list-item-icon>
-                      <v-icon>chat</v-icon>
+                      <v-icon>mdi-chat</v-icon>
                     </v-list-item-icon>
                   </v-list-item>
                 </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="primary" text @click="dialog = false">Done</v-btn>
-                </v-card-actions>
               </v-card>
             </v-dialog>
           </div>
@@ -113,7 +120,7 @@
           <v-layout row wrap>
             <v-flex v-for="(i,key) in posts" :key="key" :post="i" xs6 sm4 md4 lg4>
               <!-- <Post v-for="(i,key) in posts" :key="key" :post="i" /> -->
-              <v-dialog max-width="1000px">
+              <v-dialog :overlay-opacity="1" max-width="1000px">
                 <template v-slot:activator="{ on }">
                   <v-img
                     v-on="on"
@@ -145,13 +152,15 @@ export default {
       user: {},
       posts: [],
       dp: "",
-      dialog1: false,
-      dialog2: false,
+      followersModal: false,
+      followingModal: false,
       dialog: false,
       followers: [],
       following: [],
       notinfollowings: false,
       infollowings: false,
+      followersCount: 0,
+      followingCount: 0,
       photo:
         "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
     };
@@ -160,6 +169,15 @@ export default {
   components: {
     Post,
     Postmodal
+  },
+
+  computed: {
+    title: function() {
+      return (
+        this.$route.meta.title +
+        (this.$route.params.username ? this.$route.params.username : "")
+      );
+    }
   },
   methods: {
     arrayBufferToBase64(buffer) {
@@ -208,11 +226,16 @@ export default {
     }
   },
   created() {
-    if (this.$session.get("user").following.includes(this.username)) {
-      this.notinfollowings = false;
-      this.infollowings = true;
+    if (this.$session.get("user").username != this.username) {
+      if (this.$session.get("user").following.includes(this.username)) {
+        this.notinfollowings = false;
+        this.infollowings = true;
+      } else {
+        this.notinfollowings = true;
+        this.infollowings = false;
+      }
     } else {
-      this.notinfollowings = true;
+      this.notinfollowings = false;
       this.infollowings = false;
     }
 
@@ -237,13 +260,50 @@ export default {
     axios
       .get("/users/" + this.$route.params.username + "/followers")
       .then(res => {
-        let userDetails = {};
-        res.data.data.forEach(follower => {
-          userDetails["username"] = follower;
-          axios.get("/users/" + follower).then(userdata => {
-            userDetails["name"] = userdata.data.data.name;
+        res.data.data.forEach(person => {
+          this.followersCount += 1;
+          axios.get("/users/" + person).then(userdata => {
+            if (userdata.data.data.dp) {
+              this.followers.push({
+                name: userdata.data.data.name,
+                username: userdata.data.data.username,
+                dp:
+                  "data:image/jpeg;base64," +
+                  this.arrayBufferToBase64(userdata.data.data.dp.data.data)
+              });
+            } else {
+              this.followers.push({
+                name: userdata.data.data.name,
+                username: userdata.data.data.username,
+                dp: this.photo
+              });
+            }
           });
-          this.followers.push(userDetails);
+        });
+      });
+
+    axios
+      .get("/users/" + this.$route.params.username + "/following")
+      .then(res => {
+        res.data.data.forEach(person => {
+          this.followingCount += 1;
+          axios.get("/users/" + person).then(userdata => {
+            if (userdata.data.data.dp) {
+              this.following.push({
+                name: userdata.data.data.name,
+                username: userdata.data.data.username,
+                dp:
+                  "data:image/jpeg;base64," +
+                  this.arrayBufferToBase64(userdata.data.data.dp.data.data)
+              });
+            } else {
+              this.following.push({
+                name: userdata.data.data.name,
+                username: userdata.data.data.username,
+                dp: this.photo
+              });
+            }
+          });
         });
       });
   }
