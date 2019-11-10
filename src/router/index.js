@@ -6,6 +6,8 @@ import Signup from "../views/Signup.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Profile from "../views/Profile.vue";
 import store from "../store/index"
+import Messages from "../views/Messages.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -76,6 +78,11 @@ const routes = [
       document.title = title;
       next();
     }
+  },
+  {
+    path: "/chat",
+    name: 'messages',
+    component: Messages
   }
 ];
 

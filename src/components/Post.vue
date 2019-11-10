@@ -33,7 +33,7 @@
         <v-card-text class="pa-0 subtitle-1 pb-1">
           <truncate clamp="show more" :length="90" less="show less" type="html" :text="p"></truncate>
         </v-card-text>
-        <v-dialog width="1200px">
+        <v-dialog :overlay-opacity="1" width="1200px">
           <template v-slot:activator="{ on }">
             <v-img
               v-on="on"
