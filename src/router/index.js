@@ -5,6 +5,8 @@ import Login from "../views/Login.vue"
 import Signup from "../views/Signup.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Profile from "../views/Profile.vue";
+import Messages from "../views/Messages.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -30,6 +32,10 @@ const routes = [
     path: "/profile/:username",
     name: "profile",
     component: Profile
+  }, {
+    path: "/chat",
+    name: 'messages',
+    component: Messages
   }
 ];
 
