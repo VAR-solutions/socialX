@@ -137,6 +137,7 @@ export default {
   created() {
     axios.get("/posts").then(res => {
       res.data.data.forEach(element => {
+        element.mypost = (this.$store.state.user.username == element.username);
         element.photo = this.arrayBufferToBase64(element.photo.data.data);
         this.posts.push(element);
       });
