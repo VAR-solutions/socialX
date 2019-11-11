@@ -27,6 +27,7 @@
                 type="password"
               />
             </v-form>
+            <span class="serror" v-if="signupError">Username or Email not available</span>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -51,7 +52,8 @@ export default {
       email: "",
       password: "",
       name: "",
-      username: ""
+      username: "",
+      signupError: false
     };
   },
   methods: {
@@ -65,10 +67,16 @@ export default {
         })
         .then(res => {
           this.$router.push({ name: "login" });
+        }).catch(err => {
+          this.signupError = true
         });
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+.serror {
+  color: red;
+}
+</style>

@@ -17,7 +17,6 @@
                 name="email"
                 type="text"
               />
-
               <v-text-field
                 id="password"
                 color="white"
@@ -28,6 +27,7 @@
                 type="password"
               />
             </v-form>
+            <span class="lerror" v-if="loginError">Invalid Email or Password</span>
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -51,6 +51,7 @@ export default {
     return {
       email: "",
       password: "",
+      loginError: false,
       rules: {
         required: value => !!value || "Required.",
         email: value => {
@@ -66,17 +67,27 @@ export default {
         email: this.email,
         password: this.password
       };
-      this.$store.dispatch("login", data).then(res => {
-        this.$session.start();
-        this.$session.set("jwt", res.data.token);
-        this.$session.set("user", res.data.data);
-        axios.defaults.headers.common["x-access-token"] = res.data.token;
-        this.$router.push({ name: "dashboard" });
-        location.reload();
-      });
+      let ch = 0;
+      this.$store.dispatch("login", data).then(
+        res => {
+          this.$session.start();
+          this.$session.set("jwt", res.data.token);
+          this.$session.set("user", res.data.data);
+          axios.defaults.headers.common["x-access-token"] = res.data.token;
+          this.$router.push({ name: "dashboard" });
+          location.reload();
+        },
+        err => {
+          (this.loginError = true), console.log(err);
+        }
+      );
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+.lerror {
+  color: red;
+}
+</style>

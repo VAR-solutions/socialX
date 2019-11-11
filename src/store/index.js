@@ -37,7 +37,11 @@ export default new Vuex.Store({
           .then(function (result) {
             commit("SET_USER", result.data.data);
             resolve(result);
-          });
+          }).catch(
+          function (err) {
+            reject({error: err, message: "Invalid details"});
+          }
+          );
       })
 
     },
@@ -57,8 +61,7 @@ export default new Vuex.Store({
             resolve(res)
           })
           .catch(err => {
-            console.log(err);
-            reject(err)
+            reject({error: err, message: "Username not available"})
           });
       })
     }
