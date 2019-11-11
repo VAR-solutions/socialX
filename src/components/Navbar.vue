@@ -37,12 +37,14 @@
       <v-app-bar-nav-icon v-if="auth" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
         <router-link :to="{ name: 'dashboard'}">
-          <v-avatar :tile="true">
-            <v-img
-              src="https://c7.uihere.com/files/203/717/254/social-science-global-perspectives-social-media-world-business-social-media.jpg"
+          
+          
+            
+            <v-img :tile="true" height="40" width="80"
+              src="../XWritten.png"
             ></v-img>
-          </v-avatar>
-          <span>SocialX</span>
+         
+          
         </router-link>
       </v-toolbar-title>
 

@@ -1,11 +1,11 @@
 <template>
   <v-container fluid pa-0>
     <v-row justify="center">
-      <h1 class="regular font-weight-light mb-4">Have something on your mind ?</h1>
-
+      <h1 class="regular font-weight-light mb-3">Have something on your mind ?</h1>
+       
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on">Create Post</v-btn>
+          <v-btn class="mt-1 ml-3" color="primary" dark v-on="on">Create Post</v-btn>
         </template>
         <v-card>
           <v-card-title>
