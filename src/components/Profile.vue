@@ -69,9 +69,9 @@
                       <v-list-item-title v-text="person.name"></v-list-item-title>
                     </v-list-item-content>
 
-                    <v-list-item-icon>
+                    <!-- <v-list-item-icon>
                       <v-icon>mdi-account-plus</v-icon>
-                    </v-list-item-icon>
+                    </v-list-item-icon> -->
                   </v-list-item>
                 </v-card-text>
 
@@ -104,9 +104,9 @@
                       <v-list-item-title v-text="person.name"></v-list-item-title>
                     </v-list-item-content>
 
-                    <v-list-item-icon>
+                    <!-- <v-list-item-icon>
                       <v-icon>mdi-chat</v-icon>
-                    </v-list-item-icon>
+                    </v-list-item-icon> -->
                   </v-list-item>
                 </v-card-text>
               </v-card>
@@ -197,6 +197,7 @@ export default {
         .then(res => {
           this.notinfollowings = false;
           this.infollowings = true;
+          this.followersCount += 1
           axios
             .get("/users/" + this.$session.get("user").username)
             .then(res => {
@@ -215,6 +216,7 @@ export default {
         )
         .then(res => {
           this.infollowings = false;
+          this.followersCount -= 1
           this.notinfollowings = true;
           axios
             .get("/users/" + this.$session.get("user").username)

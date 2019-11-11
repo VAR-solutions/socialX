@@ -7,6 +7,9 @@
     <v-flex xs12 sm12 md5 lg4 id="scroll-target" style="max-height: 530px" class="overflow-y-auto">
       <v-card elevation="0" color="#212121">
         <v-card-title>Comments</v-card-title>
+        <v-card-text v-if="commentcount == 0">
+          No comments to show
+        </v-card-text>
         <v-card-text style="height:100%">
           <Comment
             v-show="show"
