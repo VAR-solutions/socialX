@@ -99,12 +99,13 @@ export default {
       axios.post("/posts", formData).then(res => {
         var post = res.data.data;
         post.photo = this.arrayBufferToBase64(post.photo.data.data);
-        this.posts.push(post);
+        this.posts.unshift(post);
         this.dialog = false;
         this.caption = "";
         this.file = null;
         this.showPreview = false;
         this.imagePreview = "";
+        location.reload()
       });
     },
     handleFileUpload() {
