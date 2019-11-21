@@ -53,6 +53,7 @@
       <v-toolbar-items>
         <v-btn v-if="!auth" exact text depressed to="/signup">SignUp</v-btn>
         <v-btn v-if="!auth" exact text depressed to="/login">Login</v-btn>
+        <v-btn v-if="auth" exact text depressed to="/messages">Chat</v-btn>
         <v-btn v-if="auth" exact text depressed @click="logout">Logout</v-btn>
       </v-toolbar-items>
 

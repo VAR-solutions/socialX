@@ -26,6 +26,10 @@ export default {
         "jwt"
       );
       let user = this.$session.get("user");
+      this.$socket.client.emit("connected", user.username);
+      this.$socket.client.on("connected", data => {
+        console.log(data);
+      });
       axios.get("/users/" + user.username).then(res => {
         this.$store.commit("SET_USER", res.data.data);
         this.$session.set("user", res.data.data);

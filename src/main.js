@@ -6,7 +6,11 @@ import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import VueSession from 'vue-session';
 import moment from "vue-moment";
-
+import VueSocketIOExt from 'vue-socket.io-extended';
+import io from 'socket.io-client';
+const socket = io('http://10.100.148.147:8000');
+ 
+Vue.use(VueSocketIOExt, socket);
 Vue.config.productionTip = false;
 Vue.use(VueSession);
 Vue.use(moment);
@@ -14,5 +18,13 @@ new Vue({
   router,
   store,
   vuetify,
+  sockets: {
+    connect: function () {
+      console.log('socket connected')
+    },
+    customEmit: function (data) {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+    }
+  },
   render: h => h(App)
 }).$mount("#app");

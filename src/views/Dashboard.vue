@@ -2,7 +2,6 @@
   <v-container fluid pa-0>
     <v-row justify="center">
       <h1 class="regular font-weight-light mb-3">Have something on your mind ?</h1>
-       
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
           <v-btn class="mt-1 ml-3" color="primary" dark v-on="on">Create Post</v-btn>
@@ -105,7 +104,7 @@ export default {
         this.file = null;
         this.showPreview = false;
         this.imagePreview = "";
-        location.reload()
+        location.reload();
       });
     },
     handleFileUpload() {
@@ -137,7 +136,7 @@ export default {
   created() {
     axios.get("/posts").then(res => {
       res.data.data.forEach(element => {
-        element.mypost = (this.$store.state.user.username == element.username);
+        element.mypost = this.$store.state.user.username == element.username;
         element.photo = this.arrayBufferToBase64(element.photo.data.data);
         this.posts.push(element);
       });

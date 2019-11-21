@@ -80,7 +80,7 @@ const routes = [
     }
   },
   {
-    path: "/chat",
+    path: "/messages/",
     name: 'messages',
     component: Messages
   }
