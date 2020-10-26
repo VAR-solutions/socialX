@@ -33,7 +33,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app clipped-right color="rgb(40,40,40)" flat dark>
+    <v-app-bar app clipped-right color="rgb(40,40,40)" text dark>
       <v-app-bar-nav-icon v-if="auth" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
         <router-link :to="{ name: 'dashboard'}">
