@@ -148,7 +148,7 @@
     <v-spacer></v-spacer>
     <v-snackbar v-model="snackbar" top :timeout="6000" vertical>
       You have to login first to like and comment
-      <v-btn dark flat @click="snackbar = false">Close</v-btn>
+      <v-btn dark text @click="snackbar = false">Close</v-btn>
     </v-snackbar>
   </v-container>
 </template>
