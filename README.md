@@ -10,11 +10,7 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
-
-```
-npm run build
-```
+- Note run <a href="https://github.com/VAR-solutions/socialX-rest-api">REST API</a> server first then run this project
 
 ### Snapshots
 
@@ -32,6 +28,7 @@ npm run build
 - Personalised feed of following
 - Update profile
 - 1-on-1 chat
+- REST- API - <a href="https://github.com/VAR-solutions/socialX-rest-api">here</a>
 
 ---
 
