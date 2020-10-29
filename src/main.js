@@ -8,7 +8,7 @@ import VueSession from 'vue-session';
 import moment from "vue-moment";
 import VueSocketIOExt from 'vue-socket.io-extended';
 import io from 'socket.io-client';
-const socket = io('http://10.100.148.147:8000');
+const socket = io('http://ec2-3-21-103-10.us-east-2.compute.amazonaws.com:8000');
  
 Vue.use(VueSocketIOExt, socket);
 Vue.config.productionTip = false;
